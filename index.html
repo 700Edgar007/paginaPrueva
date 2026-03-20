@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Web Completa</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #0f172a;
+    color: white;
+}
+
+/* NAVBAR */
+nav {
+    position: fixed;
+    width: 100%;
+    background: #1e293b;
+    padding: 15px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #38bdf8;
+}
+
+/* SECCIONES */
+section {
+    height: 100vh;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+/* HOME */
+#home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
+}
+
+#home h1 {
+    font-size: 3em;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background: #38bdf8;
+    color: black;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+button:hover {
+    background: #0ea5e9;
+}
+
+/* TARJETAS */
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    width: 250px;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* FORMULARIO */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: auto;
+}
+
+input, textarea {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+/* FOOTER */
+footer {
+    background: #020617;
+    padding: 20px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#home">Inicio</a>
+    <a href="#services">Servicios</a>
+    <a href="#about">Sobre mí</a>
+    <a href="#contact">Contacto</a>
+</nav>
+
+<!-- HOME -->
+<section id="home">
+    <h1>🚀 Bienvenido</h1>
+    <p>Esta es una página web completa hecha en un solo archivo</p>
+    <button onclick="saludar()">Haz clic</button>
+</section>
+
+<!-- SERVICIOS -->
+<section id="services">
+    <h2>Servicios</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>💻 Desarrollo</h3>
+            <p>Creación de aplicaciones web modernas</p>
+        </div>
+        <div class="card">
+            <h3>🎨 Diseño</h3>
+            <p>Interfaces atractivas y funcionales</p>
+        </div>
+        <div class="card">
+            <h3>⚙️ Soporte</h3>
+            <p>Mantenimiento y optimización</p>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <h2>Sobre mí</h2>
+    <p>Soy un desarrollador aprendiendo a crear aplicaciones completas 🚀</p>
+</section>
+
+<!-- CONTACTO -->
+<section id="contact">
+    <h2>Contacto</h2>
+    <form onsubmit="enviarFormulario(event)">
+        <input type="text" placeholder="Nombre" required>
+        <input type="email" placeholder="Correo" required>
+        <textarea placeholder="Mensaje" required></textarea>
+        <button type="submit">Enviar</button>
+    </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Mi Web - Todos los derechos reservados</p>
+</footer>
+
+<script>
+function saludar() {
+    alert("🔥 Bienvenido a tu web profesional");
+}
+
+function enviarFormulario(e) {
+    e.preventDefault();
+    alert("✅ Mensaje enviado correctamente");
+}
+</script>
+
+</body>
+</html>
