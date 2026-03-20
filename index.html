@@ -73,6 +73,10 @@ nav a:hover {
     transform: translateY(-1px);
 }
 
+.nav-game {
+    background: rgba(201, 111, 59, 0.14);
+}
+
 section {
     min-height: 100vh;
     padding: 130px 20px 90px;
@@ -82,6 +86,7 @@ section {
 }
 
 #home,
+#game,
 #services,
 #about,
 #contact {
@@ -283,6 +288,152 @@ button:hover {
     border-color: rgba(201, 111, 59, 0.28);
 }
 
+#game {
+    text-align: center;
+}
+
+.game-layout {
+    margin-top: 42px;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.game-panel,
+.game-sidebar {
+    padding: 30px;
+    border-radius: 28px;
+    background: rgba(255, 250, 243, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow);
+}
+
+.game-sidebar {
+    text-align: left;
+}
+
+.game-sidebar p,
+.game-sidebar li,
+.game-status,
+.turn-indicator {
+    color: var(--muted);
+}
+
+.piece-legend {
+    display: grid;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(247, 237, 226, 0.9);
+    border: 1px solid rgba(201, 111, 59, 0.12);
+}
+
+.legend-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, rgba(201, 111, 59, 0.18), rgba(255, 255, 255, 0.9));
+}
+
+.turn-indicator {
+    margin-top: 18px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.game-status {
+    min-height: 1.5em;
+    margin-top: 12px;
+    font-size: 1rem;
+}
+
+.game-board {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.square {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px;
+    color: var(--text);
+    background: rgba(247, 237, 226, 0.9);
+    box-shadow: none;
+    transition: transform 0.18s ease, background 0.18s ease, outline-color 0.18s ease;
+}
+
+.square.dark {
+    background: rgba(231, 209, 189, 0.92);
+}
+
+.square:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: none;
+    filter: none;
+}
+
+.square.selected {
+    outline: 3px solid rgba(201, 111, 59, 0.45);
+}
+
+.square.available {
+    background: rgba(196, 225, 188, 0.9);
+}
+
+.square.capture {
+    background: rgba(240, 183, 183, 0.95);
+}
+
+.square.ai-piece .piece-symbol,
+.square.ai-piece .piece-name {
+    color: #8f3f2a;
+}
+
+.piece-symbol {
+    font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+    line-height: 1;
+}
+
+.piece-name {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.board-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.game-note {
+    margin-top: 16px;
+    font-size: 0.92rem;
+    color: var(--muted);
+}
+
 #services,
 #about,
 #contact {
@@ -428,6 +579,7 @@ footer {
 
     .hero,
     .cards,
+    .game-layout,
     #about .about-grid,
     #contact .contact-grid {
         grid-template-columns: 1fr;
@@ -435,9 +587,16 @@ footer {
 
     .hero-copy,
     .card,
+    .game-panel,
+    .game-sidebar,
     .info-panel,
     .contact-panel {
         text-align: left;
+    }
+
+    .square {
+        border-radius: 14px;
+        padding: 5px;
     }
 
     section {
@@ -455,6 +614,19 @@ footer {
         flex-direction: column;
         align-items: stretch;
     }
+
+    .game-panel,
+    .game-sidebar {
+        padding: 22px;
+    }
+
+    .game-board {
+        gap: 4px;
+    }
+
+    .piece-name {
+        font-size: 0.5rem;
+    }
 }
 </style>
 </head>
@@ -464,6 +636,7 @@ footer {
 <!-- NAV -->
 <nav>
     <a href="#home">Inicio</a>
+    <a class="nav-game" href="#game">Mini ajedrez</a>
     <a href="#services">Servicios</a>
     <a href="#about">Sobre mí</a>
     <a href="#contact">Contacto</a>
@@ -495,6 +668,69 @@ footer {
             <div class="metric">
                 <span>Diseño</span>
                 <strong>Responsive</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MINI AJEDREZ -->
+<section id="game">
+    <div class="section-inner">
+        <span class="eyebrow fade-up">Juego extra</span>
+        <h2 class="fade-up delay-1">Mini ajedrez contra la maquina</h2>
+        <p class="section-lead fade-up delay-2">Ahora el tablero es completo de 8x8 con todas las piezas clasicas. Tu juegas con blancas, la maquina responde sola y gana quien capture primero el rey rival.</p>
+        <div class="game-layout">
+            <div class="game-sidebar fade-up">
+                <h3>Reglas rapidas</h3>
+                <p>Selecciona una pieza y luego toca una casilla iluminada. Hay peones, torres, caballos, alfiles, dama y rey con sus movimientos clasicos.</p>
+                <div class="piece-legend">
+                    <div class="legend-item">
+                        <div class="legend-icon">♙</div>
+                        <div>
+                            <strong>Peon</strong>
+                            <p>Avanza hacia adelante, captura en diagonal y puede abrir con dos pasos.</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon">♔</div>
+                        <div>
+                            <strong>Rey</strong>
+                            <p>Si lo pierdes, termina la partida.</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon">♖</div>
+                        <div>
+                            <strong>Torre</strong>
+                            <p>Controla filas y columnas para presionar a la maquina.</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon">♘</div>
+                        <div>
+                            <strong>Caballo</strong>
+                            <p>Salta piezas y sirve para sorprender.</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon">♗</div>
+                        <div>
+                            <strong>Alfil y dama</strong>
+                            <p>Controlan diagonales y la dama tambien filas y columnas.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="game-note">La IA prioriza capturas fuertes, luego presion sobre tu rey y avance hacia el centro.</p>
+            </div>
+            <div class="game-panel fade-up delay-1">
+                <h3>Tu tablero</h3>
+                <p class="turn-indicator" id="turnIndicator">Turno: jugador</p>
+                <p class="game-status" id="gameStatus">Mueve tus piezas blancas para derribar al rey de la maquina.</p>
+                <div id="gameBoard" class="game-board" aria-label="Mini tablero de ajedrez"></div>
+                <div class="board-actions">
+                    <button type="button" onclick="reiniciarMiniAjedrez()">Nueva partida</button>
+                    <button type="button" class="ghost-button" onclick="mostrarAyudaJuego()">Como jugar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -582,6 +818,484 @@ footer {
 </footer>
 
 <script>
+const BOARD_SIZE = 8;
+const PIECE_LABELS = {
+    pawn: "peon",
+    king: "rey",
+    queen: "dama",
+    bishop: "alfil",
+    rook: "torre",
+    knight: "caballo"
+};
+
+const PIECE_SYMBOLS = {
+    white: { pawn: "♙", king: "♔", queen: "♕", bishop: "♗", rook: "♖", knight: "♘" },
+    black: { pawn: "♟", king: "♚", queen: "♛", bishop: "♝", rook: "♜", knight: "♞" }
+};
+
+const PIECE_VALUES = {
+    pawn: 3,
+    king: 100,
+    queen: 20,
+    bishop: 9,
+    rook: 12,
+    knight: 7
+};
+
+let gameState = null;
+
+function createPiece(color, type) {
+    return { color, type };
+}
+
+function createInitialGameState() {
+    return {
+        board: [
+            [createPiece("black", "rook"), createPiece("black", "knight"), createPiece("black", "bishop"), createPiece("black", "queen"), createPiece("black", "king"), createPiece("black", "bishop"), createPiece("black", "knight"), createPiece("black", "rook")],
+            [createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn"), createPiece("black", "pawn")],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn"), createPiece("white", "pawn")],
+            [createPiece("white", "rook"), createPiece("white", "knight"), createPiece("white", "bishop"), createPiece("white", "queen"), createPiece("white", "king"), createPiece("white", "bishop"), createPiece("white", "knight"), createPiece("white", "rook")]
+        ],
+        currentTurn: "white",
+        selected: null,
+        validMoves: [],
+        winner: null,
+        busy: false,
+        status: "Mueve tus piezas blancas para derribar al rey de la maquina."
+    };
+}
+
+function reiniciarMiniAjedrez() {
+    gameState = createInitialGameState();
+    renderMiniAjedrez();
+}
+
+function mostrarAyudaJuego() {
+    alert("Ajedrez 8x8: captura el rey enemigo para ganar. Incluye peones, torres, caballos, alfiles, dama y rey. No hay enroque, jaque mate formal ni en passant, pero los movimientos base si estan activos.");
+}
+
+function renderMiniAjedrez() {
+    const boardElement = document.getElementById("gameBoard");
+    const statusElement = document.getElementById("gameStatus");
+    const turnElement = document.getElementById("turnIndicator");
+
+    if (!boardElement || !statusElement || !turnElement || !gameState) {
+        return;
+    }
+
+    boardElement.innerHTML = "";
+    statusElement.textContent = gameState.status;
+    turnElement.textContent = "Turno: " + (gameState.winner ? "partida terminada" : gameState.currentTurn === "white" ? "jugador" : "maquina");
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+        for (let col = 0; col < BOARD_SIZE; col += 1) {
+            const square = document.createElement("button");
+            const piece = gameState.board[row][col];
+            const move = findMove(gameState.validMoves, row, col);
+            square.type = "button";
+            square.className = "square " + (((row + col) % 2 === 0) ? "light" : "dark");
+
+            if (gameState.selected && gameState.selected.row === row && gameState.selected.col === col) {
+                square.classList.add("selected");
+            }
+
+            if (move) {
+                square.classList.add(move.capture ? "capture" : "available");
+            }
+
+            if (piece && piece.color === "black") {
+                square.classList.add("ai-piece");
+            }
+
+            square.setAttribute("aria-label", buildSquareLabel(row, col, piece, move));
+            square.onclick = function () {
+                handleSquareClick(row, col);
+            };
+
+            if (piece) {
+                square.innerHTML = '<span class="piece-symbol">' + PIECE_SYMBOLS[piece.color][piece.type] + '</span><span class="piece-name">' + PIECE_LABELS[piece.type] + '</span>';
+            }
+
+            boardElement.appendChild(square);
+        }
+    }
+}
+
+function buildSquareLabel(row, col, piece, move) {
+    const coords = "fila " + (row + 1) + ", columna " + (col + 1);
+
+    if (piece) {
+        const side = piece.color === "white" ? "jugador" : "maquina";
+        return coords + ", " + PIECE_LABELS[piece.type] + " de " + side;
+    }
+
+    if (move) {
+        return coords + ", movimiento disponible";
+    }
+
+    return coords + ", vacia";
+}
+
+function handleSquareClick(row, col) {
+    if (!gameState || gameState.winner || gameState.busy || gameState.currentTurn !== "white") {
+        return;
+    }
+
+    const piece = gameState.board[row][col];
+    const move = findMove(gameState.validMoves, row, col);
+
+    if (move && gameState.selected) {
+        applyMove(gameState.selected, move);
+        return;
+    }
+
+    if (!piece || piece.color !== "white") {
+        gameState.selected = null;
+        gameState.validMoves = [];
+        gameState.status = "Selecciona una pieza blanca para mover.";
+        renderMiniAjedrez();
+        return;
+    }
+
+    const validMoves = getValidMovesForPiece(gameState.board, row, col);
+    gameState.selected = { row, col };
+    gameState.validMoves = validMoves;
+    gameState.status = validMoves.length
+        ? "Elige una casilla resaltada para mover tu " + PIECE_LABELS[piece.type] + "."
+        : "Esa pieza no tiene movimientos disponibles ahora.";
+    renderMiniAjedrez();
+}
+
+function applyMove(from, move) {
+    const piece = gameState.board[from.row][from.col];
+    const target = gameState.board[move.row][move.col];
+    gameState.board[move.row][move.col] = piece;
+    gameState.board[from.row][from.col] = null;
+    gameState.selected = null;
+    gameState.validMoves = [];
+
+    if (target && target.type === "king") {
+        gameState.winner = piece.color;
+        gameState.status = piece.color === "white"
+            ? "Ganaste: capturaste el rey de la maquina."
+            : "La maquina capturo tu rey. Prueba otra vez.";
+        renderMiniAjedrez();
+        return;
+    }
+
+    gameState.currentTurn = piece.color === "white" ? "black" : "white";
+    gameState.status = piece.color === "white"
+        ? "La maquina esta pensando..."
+        : "Tu turno: responde al movimiento de la maquina.";
+    renderMiniAjedrez();
+
+    if (gameState.currentTurn === "black") {
+        gameState.busy = true;
+        window.setTimeout(playAiTurn, 500);
+    }
+}
+
+function playAiTurn() {
+    if (!gameState || gameState.winner) {
+        return;
+    }
+
+    const moves = getAllMoves(gameState.board, "black");
+
+    if (!moves.length) {
+        gameState.winner = "white";
+        gameState.busy = false;
+        gameState.status = "Ganaste: la maquina se quedo sin movimientos.";
+        renderMiniAjedrez();
+        return;
+    }
+
+    moves.sort(function (a, b) {
+        return scoreMove(b) - scoreMove(a);
+    });
+
+    const bestScore = scoreMove(moves[0]);
+    const bestMoves = moves.filter(function (move) {
+        return scoreMove(move) === bestScore;
+    });
+    const chosenMove = bestMoves[Math.floor(Math.random() * bestMoves.length)];
+    gameState.busy = false;
+    applyMove(chosenMove.from, chosenMove.to);
+}
+
+function scoreMove(move) {
+    const captureScore = move.to.capture ? PIECE_VALUES[move.to.capture.type] * 20 : 0;
+    const centerBonus = 6 - distanceToCenter(move.to.row, move.to.col);
+    const kingPressure = move.to.attackOnKing ? 16 : 0;
+    const advancement = BOARD_SIZE - move.to.row;
+    return captureScore + centerBonus + kingPressure + advancement;
+}
+
+function distanceToCenter(row, col) {
+    const center = (BOARD_SIZE - 1) / 2;
+    return Math.abs(center - row) + Math.abs(center - col);
+}
+
+function getAllMoves(board, color) {
+    const moves = [];
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+        for (let col = 0; col < BOARD_SIZE; col += 1) {
+            const piece = board[row][col];
+
+            if (!piece || piece.color !== color) {
+                continue;
+            }
+
+            const pieceMoves = getValidMovesForPiece(board, row, col);
+            pieceMoves.forEach(function (move) {
+                const futureBoard = cloneBoard(board);
+                futureBoard[move.row][move.col] = futureBoard[row][col];
+                futureBoard[row][col] = null;
+                move.attackOnKing = squareIsThreatened(futureBoard, "white");
+                moves.push({ from: { row, col }, to: move });
+            });
+        }
+    }
+
+    return moves;
+}
+
+function squareIsThreatened(board, targetColor) {
+    let kingPosition = null;
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+        for (let col = 0; col < BOARD_SIZE; col += 1) {
+            const piece = board[row][col];
+            if (piece && piece.color === targetColor && piece.type === "king") {
+                kingPosition = { row, col };
+            }
+        }
+    }
+
+    if (!kingPosition) {
+        return true;
+    }
+
+    const opponentColor = targetColor === "white" ? "black" : "white";
+
+    for (let row = 0; row < BOARD_SIZE; row += 1) {
+        for (let col = 0; col < BOARD_SIZE; col += 1) {
+            const piece = board[row][col];
+            if (!piece || piece.color !== opponentColor) {
+                continue;
+            }
+
+            const moves = getPseudoMoves(board, row, col, false);
+            if (findMove(moves, kingPosition.row, kingPosition.col)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function getValidMovesForPiece(board, row, col) {
+    return getPseudoMoves(board, row, col, true);
+}
+
+function getPseudoMoves(board, row, col, includeCaptureInfo) {
+    const piece = board[row][col];
+
+    if (!piece) {
+        return [];
+    }
+
+    if (piece.type === "king") {
+        return getKingMoves(board, row, col, piece.color, includeCaptureInfo);
+    }
+
+    if (piece.type === "queen") {
+        return getQueenMoves(board, row, col, piece.color, includeCaptureInfo);
+    }
+
+    if (piece.type === "bishop") {
+        return getBishopMoves(board, row, col, piece.color, includeCaptureInfo);
+    }
+
+    if (piece.type === "rook") {
+        return getRookMoves(board, row, col, piece.color, includeCaptureInfo);
+    }
+
+    if (piece.type === "pawn") {
+        return getPawnMoves(board, row, col, piece.color, includeCaptureInfo);
+    }
+
+    return getKnightMoves(board, row, col, piece.color, includeCaptureInfo);
+}
+
+function getPawnMoves(board, row, col, color, includeCaptureInfo) {
+    const moves = [];
+    const direction = color === "white" ? -1 : 1;
+    const startRow = color === "white" ? 6 : 1;
+    const nextRow = row + direction;
+
+    if (insideBoard(nextRow, col) && !board[nextRow][col]) {
+        moves.push({ row: nextRow, col, capture: null });
+
+        const doubleRow = row + (direction * 2);
+        if (row === startRow && insideBoard(doubleRow, col) && !board[doubleRow][col]) {
+            moves.push({ row: doubleRow, col, capture: null });
+        }
+    }
+
+    [col - 1, col + 1].forEach(function (targetCol) {
+        if (!insideBoard(nextRow, targetCol)) {
+            return;
+        }
+
+        const target = board[nextRow][targetCol];
+        if (target && target.color !== color) {
+            moves.push({ row: nextRow, col: targetCol, capture: includeCaptureInfo ? target : null });
+        }
+    });
+
+    return moves;
+}
+
+function getKingMoves(board, row, col, color, includeCaptureInfo) {
+    const moves = [];
+
+    for (let rowStep = -1; rowStep <= 1; rowStep += 1) {
+        for (let colStep = -1; colStep <= 1; colStep += 1) {
+            if (!rowStep && !colStep) {
+                continue;
+            }
+
+            const nextRow = row + rowStep;
+            const nextCol = col + colStep;
+            pushMove(board, moves, nextRow, nextCol, color, includeCaptureInfo);
+        }
+    }
+
+    return moves;
+}
+
+function getRookMoves(board, row, col, color, includeCaptureInfo) {
+    const directions = [
+        { row: 1, col: 0 },
+        { row: -1, col: 0 },
+        { row: 0, col: 1 },
+        { row: 0, col: -1 }
+    ];
+
+    return getSlidingMoves(board, row, col, color, includeCaptureInfo, directions);
+}
+
+function getBishopMoves(board, row, col, color, includeCaptureInfo) {
+    const directions = [
+        { row: 1, col: 1 },
+        { row: 1, col: -1 },
+        { row: -1, col: 1 },
+        { row: -1, col: -1 }
+    ];
+
+    return getSlidingMoves(board, row, col, color, includeCaptureInfo, directions);
+}
+
+function getQueenMoves(board, row, col, color, includeCaptureInfo) {
+    const directions = [
+        { row: 1, col: 0 },
+        { row: -1, col: 0 },
+        { row: 0, col: 1 },
+        { row: 0, col: -1 },
+        { row: 1, col: 1 },
+        { row: 1, col: -1 },
+        { row: -1, col: 1 },
+        { row: -1, col: -1 }
+    ];
+
+    return getSlidingMoves(board, row, col, color, includeCaptureInfo, directions);
+}
+
+function getSlidingMoves(board, row, col, color, includeCaptureInfo, directions) {
+    const moves = [];
+
+    directions.forEach(function (direction) {
+        let nextRow = row + direction.row;
+        let nextCol = col + direction.col;
+
+        while (insideBoard(nextRow, nextCol)) {
+            const target = board[nextRow][nextCol];
+
+            if (!target) {
+                moves.push({ row: nextRow, col: nextCol, capture: null });
+            } else {
+                if (target.color !== color) {
+                    moves.push({ row: nextRow, col: nextCol, capture: includeCaptureInfo ? target : null });
+                }
+                break;
+            }
+
+            nextRow += direction.row;
+            nextCol += direction.col;
+        }
+    });
+
+    return moves;
+}
+
+function getKnightMoves(board, row, col, color, includeCaptureInfo) {
+    const moves = [];
+    const jumps = [
+        { row: -2, col: -1 }, { row: -2, col: 1 },
+        { row: -1, col: -2 }, { row: -1, col: 2 },
+        { row: 1, col: -2 }, { row: 1, col: 2 },
+        { row: 2, col: -1 }, { row: 2, col: 1 }
+    ];
+
+    jumps.forEach(function (jump) {
+        pushMove(board, moves, row + jump.row, col + jump.col, color, includeCaptureInfo);
+    });
+
+    return moves;
+}
+
+function pushMove(board, moves, row, col, color, includeCaptureInfo) {
+    if (!insideBoard(row, col)) {
+        return;
+    }
+
+    const target = board[row][col];
+
+    if (!target) {
+        moves.push({ row, col, capture: null });
+        return;
+    }
+
+    if (target.color !== color) {
+        moves.push({ row, col, capture: includeCaptureInfo ? target : null });
+    }
+}
+
+function insideBoard(row, col) {
+    return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
+}
+
+function cloneBoard(board) {
+    return board.map(function (line) {
+        return line.map(function (piece) {
+            return piece ? { color: piece.color, type: piece.type } : null;
+        });
+    });
+}
+
+function findMove(moves, row, col) {
+    return moves.find(function (move) {
+        return move.row === row && move.col === col;
+    });
+}
+
 function saludar() {
     alert("🔥 Bienvenido a tu web profesional");
 }
@@ -620,6 +1334,8 @@ function enviarFormulario(e) {
     estado.textContent = "Abriendo WhatsApp con el mensaje listo para ese numero...";
     window.open(url, "_blank", "noopener");
 }
+
+reiniciarMiniAjedrez();
 </script>
 
 </body>
