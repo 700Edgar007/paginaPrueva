@@ -87,6 +87,7 @@ section {
 
 #home,
 #game,
+#equipo,
 #services,
 #about,
 #contact {
@@ -435,9 +436,123 @@ button:hover {
 }
 
 #services,
+#equipo,
 #about,
 #contact {
     text-align: center;
+}
+
+.team-shell {
+    margin-top: 42px;
+    display: grid;
+    gap: 22px;
+}
+
+.team-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 28px;
+    border-radius: 24px;
+    background: rgba(255, 250, 243, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.team-toolbar p,
+.team-status,
+.team-empty,
+.team-card p,
+.team-card li {
+    color: var(--muted);
+}
+
+.team-create {
+    display: grid;
+    grid-template-columns: 0.6fr 1.1fr 0.8fr auto;
+    gap: 12px;
+    padding: 24px 28px;
+    border-radius: 24px;
+    background: rgba(255, 250, 243, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow);
+}
+
+.team-status {
+    min-height: 1.5em;
+    text-align: left;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.team-card,
+.team-empty {
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(255, 250, 243, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.team-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.team-badge,
+.team-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.team-badge {
+    background: rgba(201, 111, 59, 0.14);
+    color: var(--accent-dark);
+}
+
+.team-group {
+    background: rgba(115, 146, 114, 0.14);
+    color: #496347;
+}
+
+.team-card ul {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+}
+
+.team-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.delete-button {
+    background: linear-gradient(135deg, #b65147, #cf756a);
+}
+
+.delete-button:hover {
+    box-shadow: 0 18px 34px rgba(182, 81, 71, 0.28);
+}
+
+.team-card li {
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
 }
 
 #about .about-grid,
@@ -580,6 +695,7 @@ footer {
     .hero,
     .cards,
     .game-layout,
+    .team-grid,
     #about .about-grid,
     #contact .contact-grid {
         grid-template-columns: 1fr;
@@ -587,6 +703,10 @@ footer {
 
     .hero-copy,
     .card,
+    .team-toolbar,
+    .team-create,
+    .team-card,
+    .team-empty,
     .game-panel,
     .game-sidebar,
     .info-panel,
@@ -620,6 +740,17 @@ footer {
         padding: 22px;
     }
 
+    .team-toolbar {
+        padding: 22px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .team-create {
+        grid-template-columns: 1fr;
+        padding: 22px;
+    }
+
     .game-board {
         gap: 4px;
     }
@@ -638,6 +769,7 @@ footer {
     <a href="#home">Inicio</a>
     <a class="nav-game" href="#game">Mini ajedrez</a>
     <a href="#services">Servicios</a>
+    <a href="#equipo">Equipo</a>
     <a href="#about">Sobre mí</a>
     <a href="#contact">Contacto</a>
 </nav>
@@ -762,6 +894,32 @@ footer {
     </div>
 </section>
 
+<!-- EQUIPO API -->
+<section id="equipo">
+    <div class="section-inner">
+        <span class="eyebrow fade-up">Datos en vivo</span>
+        <h2 class="fade-up delay-1">Equipo cargado desde Supabase</h2>
+        <p class="section-lead fade-up delay-2">Esta seccion consulta la tabla `equipo` directamente desde tu API y la pinta en pantalla con recarga manual.</p>
+        <div class="team-shell">
+            <div class="team-toolbar fade-up">
+                <div>
+                    <h3>Conexion REST</h3>
+                    <p id="teamSummary">Esperando datos del equipo...</p>
+                </div>
+                <button type="button" onclick="cargarEquipo()">Actualizar equipo</button>
+            </div>
+            <form class="team-create fade-up delay-1" onsubmit="crearEquipo(event)">
+                <input id="teamId" type="number" placeholder="ID manual" min="1" required>
+                <input id="teamNombre" type="text" placeholder="Nombre del equipo" required>
+                <input id="teamGrupo" type="text" placeholder="Grupo" required>
+                <button type="submit">Agregar</button>
+            </form>
+            <p class="team-status fade-up delay-1" id="teamStatus">Consultando la API...</p>
+            <div class="team-grid" id="teamGrid" aria-live="polite"></div>
+        </div>
+    </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
     <div class="section-inner">
@@ -819,6 +977,9 @@ footer {
 
 <script>
 const BOARD_SIZE = 8;
+const TEAM_API_BASE = "https://srghllmwmxqdvoaecsbl.supabase.co/rest/v1/equipo";
+const TEAM_API_URL = TEAM_API_BASE + "?select=*";
+const TEAM_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZ2hsbG13bXhxZHZvYWVjc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMzg4MTksImV4cCI6MjA4OTYxNDgxOX0.sYwYG1Py00-Yuh19ROQlZuh4kzNptM7Was1Kpesmkl0";
 const PIECE_LABELS = {
     pawn: "peon",
     king: "rey",
@@ -1296,6 +1457,185 @@ function findMove(moves, row, col) {
     });
 }
 
+async function cargarEquipo() {
+    const teamGrid = document.getElementById("teamGrid");
+    const teamStatus = document.getElementById("teamStatus");
+    const teamSummary = document.getElementById("teamSummary");
+
+    if (!teamGrid || !teamStatus || !teamSummary) {
+        return;
+    }
+
+    teamStatus.textContent = "Consultando la API...";
+    teamSummary.textContent = "Cargando registros desde Supabase.";
+
+    try {
+        const response = await fetch(TEAM_API_URL, {
+            headers: {
+                apikey: TEAM_API_KEY,
+                Authorization: "Bearer " + TEAM_API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error HTTP " + response.status);
+        }
+
+        const records = await response.json();
+        renderEquipo(records);
+        teamStatus.textContent = "Datos actualizados correctamente.";
+        teamSummary.textContent = records.length
+            ? "Se cargaron " + records.length + " registros desde la tabla equipo."
+            : "La tabla equipo esta vacia en este momento.";
+    } catch (error) {
+        teamGrid.innerHTML = '<article class="team-empty"><h3>No se pudo cargar el equipo</h3><p>Revisa la API o intenta otra vez en unos segundos.</p></article>';
+        teamStatus.textContent = "No fue posible obtener los datos ahora mismo.";
+        teamSummary.textContent = "La consulta a Supabase fallo.";
+    }
+}
+
+async function crearEquipo(event) {
+    event.preventDefault();
+
+    const idInput = document.getElementById("teamId");
+    const nombreInput = document.getElementById("teamNombre");
+    const grupoInput = document.getElementById("teamGrupo");
+    const teamStatus = document.getElementById("teamStatus");
+
+    if (!idInput || !nombreInput || !grupoInput || !teamStatus) {
+        return;
+    }
+
+    const id = Number(idInput.value);
+    const nombre = nombreInput.value.trim();
+    const grupo = grupoInput.value.trim();
+
+    if (!Number.isInteger(id) || id < 1 || !nombre || !grupo) {
+        teamStatus.textContent = "Completa id, nombre y grupo antes de agregar.";
+        return;
+    }
+
+    teamStatus.textContent = "Agregando registro...";
+
+    try {
+        const response = await fetch(TEAM_API_BASE, {
+            method: "POST",
+            headers: {
+                apikey: TEAM_API_KEY,
+                Authorization: "Bearer " + TEAM_API_KEY,
+                "Content-Type": "application/json",
+                Prefer: "return=representation"
+            },
+            body: JSON.stringify({ id, nombre, grupo })
+        });
+
+        if (!response.ok) {
+            throw new Error("Error HTTP " + response.status);
+        }
+
+        idInput.value = "";
+        nombreInput.value = "";
+        grupoInput.value = "";
+        teamStatus.textContent = "Registro agregado correctamente.";
+        await cargarEquipo();
+    } catch (error) {
+        teamStatus.textContent = "No se pudo agregar el registro.";
+    }
+}
+
+async function eliminarEquipo(id) {
+    const numericId = Number(id);
+    const teamStatus = document.getElementById("teamStatus");
+
+    if (!Number.isFinite(numericId) || !teamStatus) {
+        return;
+    }
+
+    if (!window.confirm("Se eliminara el registro #" + numericId + ". Continuar?")) {
+        return;
+    }
+
+    teamStatus.textContent = "Eliminando registro...";
+
+    try {
+        const response = await fetch(TEAM_API_BASE + "?id=eq." + encodeURIComponent(String(numericId)), {
+            method: "DELETE",
+            headers: {
+                apikey: TEAM_API_KEY,
+                Authorization: "Bearer " + TEAM_API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error HTTP " + response.status);
+        }
+
+        teamStatus.textContent = "Registro eliminado correctamente.";
+        await cargarEquipo();
+    } catch (error) {
+        teamStatus.textContent = "No se pudo eliminar el registro.";
+    }
+}
+
+function renderEquipo(records) {
+    const teamGrid = document.getElementById("teamGrid");
+
+    if (!teamGrid) {
+        return;
+    }
+
+    if (!Array.isArray(records) || !records.length) {
+        teamGrid.innerHTML = '<article class="team-empty"><h3>Sin registros</h3><p>No llegaron elementos desde la tabla `equipo`.</p></article>';
+        return;
+    }
+
+    teamGrid.innerHTML = records.map(function (item) {
+        return buildTeamCard(item);
+    }).join("");
+}
+
+function buildTeamCard(item) {
+    const id = item.id != null ? item.id : "-";
+    const nombre = escapeHtml(item.nombre != null ? String(item.nombre) : "Sin nombre");
+    const grupo = escapeHtml(normalizeGroup(item.grupo));
+    const extraFields = Object.keys(item).filter(function (key) {
+        return key !== "id" && key !== "nombre" && key !== "grupo";
+    });
+
+    const extraMarkup = extraFields.length
+        ? extraFields.map(function (key) {
+            return "<li><strong>" + escapeHtml(key) + ":</strong> " + escapeHtml(String(item[key])) + "</li>";
+        }).join("")
+        : "<li><strong>Estado:</strong> registro visible desde la API.</li>";
+
+    return '<article class="team-card fade-up">'
+        + '<div class="team-card-top">'
+        + '<div><span class="team-badge">Registro #' + escapeHtml(String(id)) + '</span><h3>' + nombre + '</h3></div>'
+        + '<span class="team-group">Grupo ' + grupo + '</span>'
+        + '</div>'
+        + '<ul>' + extraMarkup + '</ul>'
+        + '<div class="team-card-actions"><button type="button" class="delete-button" onclick="eliminarEquipo(' + escapeHtml(String(id)) + ')">Eliminar</button></div>'
+        + '</article>';
+}
+
+function normalizeGroup(value) {
+    if (value == null) {
+        return "Sin grupo";
+    }
+
+    const cleaned = String(value).replace(/\s+/g, " ").trim();
+    return cleaned || "Sin grupo";
+}
+
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function saludar() {
     alert("🔥 Bienvenido a tu web profesional");
 }
@@ -1336,6 +1676,7 @@ function enviarFormulario(e) {
 }
 
 reiniciarMiniAjedrez();
+cargarEquipo();
 </script>
 
 </body>
